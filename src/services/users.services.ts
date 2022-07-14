@@ -1,13 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
-import { User } from '../interfaces/user.interface';
+import type { UserDto, UserUpdateDto } from '../interfaces/user.interface';
 
 @Injectable()
 export class UsersService {
-  private readonly users: { [id: string]: User } = {};
+  private readonly users: { [id: string]: UserDto } = {};
 
-  create({ login, password }: any): User {
-    const id = uuidv4();
+  create({ login, password }: Pick<UserDto, 'login' | 'password'>): UserDto {
+    const id = uuidv4(); // Проверка на корректность логина и пароля
     this.users[id] = {
       id,
       login,
@@ -20,11 +20,18 @@ export class UsersService {
     return this.users[id];
   }
 
-  getUser(id: string): User {
+  getUser(id: string): UserDto {
     return this.users[id];
   }
 
-  findAll(): User[] {
+  updateUser(id: string, info: UserUpdateDto): UserDto {
+    return {
+      ...this.users[id],
+      ...info,
+    };
+  }
+
+  findAll(): UserDto[] {
     return Object.values(this.users);
   }
 }

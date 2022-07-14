@@ -1,4 +1,4 @@
-export interface User {
+export interface UserDto {
   id: string;
   login: string;
   password: string;
@@ -6,3 +6,8 @@ export interface User {
   createdAt: number;
   updatedAt: number;
 }
+
+export type UserUpdateDto = {
+  oldPassowrd: string;
+  newPassword: string;
+};
