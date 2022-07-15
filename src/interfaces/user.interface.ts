@@ -8,6 +8,6 @@ export interface UserDto {
 }
 
 export type UserUpdateDto = {
-  oldPassowrd: string;
+  oldPassword: string;
   newPassword: string;
 };
