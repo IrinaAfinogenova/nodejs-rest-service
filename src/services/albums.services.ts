@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Album } from '../interfaces/albums.interface';
+import { Track } from '../interfaces/tracks.interface';
 import { DB } from '../db';
 
 @Injectable()
@@ -39,6 +40,7 @@ export class AlbumsService {
     }
 
     this.Albums[id] = {
+      ...currentAlbum,
       ...info,
       id: currentAlbum.id,
     };
@@ -48,6 +50,19 @@ export class AlbumsService {
 
   deleteAlbum(id): string {
     this.getAlbum(id);
+
+    Object.values(DB.tracks)?.forEach((track) => {
+      const { id, albumId } = (track || {}) as Track;
+
+      if (albumId) {
+        DB.tracks[id].albumId = null;
+      }
+    });
+
+    DB.favorites.albums = DB.favorites.albums.filter(
+      (albumId) => albumId !== id,
+    );
+
     this.Albums[id] = null;
 
     return `Album with id ${id} was deleted`;

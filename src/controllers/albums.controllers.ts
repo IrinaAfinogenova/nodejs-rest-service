@@ -2,6 +2,7 @@ import {
   ParseUUIDPipe,
   Controller,
   Delete,
+  HttpCode,
   Get,
   Post,
   Param,
@@ -41,7 +42,8 @@ export class AlbumController {
     return this.albumsService.updateAlbum(id, albumInfo);
   }
 
-  @Delete('/:id') // TODO возвращает статус 200б а надо 204
+  @Delete('/:id')
+  @HttpCode(204)
   deleteAlbum(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ): string {

@@ -11,7 +11,7 @@ export class UsersService {
   private readonly users: { [id: string]: UserDto } = {};
 
   create({ login, password }: Pick<UserDto, 'login' | 'password'>): UserDto {
-    const id = uuidv4(); // Проверка на корректность логина и пароля (Проверь)
+    const id = uuidv4();
     this.users[id] = {
       id,
       login,
@@ -21,17 +21,23 @@ export class UsersService {
       updatedAt: new Date().valueOf(),
     };
 
-    return this.users[id];
+    return this.getUser(id);
   }
 
-  async getUser(id: string): Promise<UserDto> {
+  getUser(id: string): UserDto {
     const user = this.users[id];
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    return user;
+    return Object.keys(user).reduce((object, key) => {
+      if (key !== 'password') {
+        object[key] = user[key];
+      }
+
+      return object;
+    }, {} as UserDto);
   }
 
   updatePassword(id: string, info: UserUpdateDto): UserDto {
@@ -39,13 +45,15 @@ export class UsersService {
 
     // Вынести все проверки сюда
 
-    if (currentPassword !== info.oldPassword) { // И еще проверка что старый пароль не равен новому
+    if (currentPassword !== info.oldPassword) {
       throw new ForbiddenException('old password wrong');
     }
 
     this.users[id].password = info.newPassword;
+    this.users[id].version = ++this.users[id].version;
+    this.users[id].updatedAt = new Date().valueOf();
 
-    return this.users[id];
+    return this.getUser(id);
   }
 
   findAll(): UserDto[] {

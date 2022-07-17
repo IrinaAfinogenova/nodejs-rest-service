@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Artist } from '../interfaces/artists.interface';
+import { Track } from '../interfaces/tracks.interface';
 import { DB } from '../db';
 
 @Injectable()
@@ -39,6 +40,7 @@ export class ArtistsService {
     }
 
     this.artists[id] = {
+      ...currentArtist,
       ...info,
       id: currentArtist.id,
     };
@@ -48,6 +50,19 @@ export class ArtistsService {
 
   deleteArtist(id): string {
     this.getArtist(id);
+
+    Object.values(DB.tracks).forEach((track) => {
+      const { id, artistId } = (track || {}) as Track;
+
+      if (artistId) {
+        DB.tracks[id].artistId = null;
+      }
+    });
+
+    DB.favorites.artists = DB.favorites.artists.filter(
+      (artistId) => artistId !== id,
+    );
+
     this.artists[id] = null;
 
     return `artist with id ${id} was deleted`;

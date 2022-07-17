@@ -47,8 +47,12 @@ export class TracksService {
   }
 
   deleteTrack(id): any {
-    this.getTrack(id); // TODO и не плохо бы удалять еще и из фаворитов
+    this.getTrack(id);
     this.tracks[id] = null;
+
+    DB.favorites.tracks = DB.favorites.tracks.filter(
+      (trackId) => trackId !== id,
+    );
 
     return `track with id ${id} was deleted`;
   }

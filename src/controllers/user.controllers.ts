@@ -1,5 +1,6 @@
 import {
   Controller,
+  HttpCode,
   Get,
   Post,
   Body,
@@ -13,6 +14,7 @@ import { UsersService } from '../services/users.services';
 import type { UserDto } from '../interfaces/user.interface';
 import { CreateUserDto, UpdatePasswordDto } from '../dto/user.dto';
 
+// TODO убрать бизнес логику
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UsersService) {}
@@ -55,6 +57,7 @@ export class UserController {
   }
 
   @Delete('/:id')
+  @HttpCode(204)
   deleteUser(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ): string {

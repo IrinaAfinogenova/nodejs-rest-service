@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import {
   Favorites,
@@ -7,6 +6,7 @@ import {
 import { ArtistsService } from '../services/artists.services';
 import { AlbumsService } from '../services/albums.services';
 import { TracksService } from '../services/tracks.services';
+import { DB } from '../db';
 
 @Injectable()
 export class FavoritesService {
@@ -14,11 +14,7 @@ export class FavoritesService {
   albumsService = new AlbumsService();
   tracksService = new TracksService();
 
-  private readonly favorites: Favorites = {
-    artists: [],
-    albums: [],
-    tracks: [],
-  };
+  private readonly favorites: Favorites = DB.favorites;
 
   getAll(): FavoritesCollection {
     return {
@@ -35,55 +31,55 @@ export class FavoritesService {
   }
 
   addTrackToFavs(id: string): string {
-    if (this.tracksService.getTrack(id)) {
-      this.favorites.tracks.push(id);
+    if (!DB.tracks[id]) {
+      throw new UnprocessableEntityException('this track does not exist');
     }
+
+    this.favorites.tracks.push(id);
 
     return `track ${id} was added to favorites`;
   }
 
   deleteTrackFromFavs(id: string): string {
-    if (this.tracksService.getTrack(id)) {
-      this.favorites.tracks = this.favorites.tracks.filter(
-        (trackId) => id !== trackId,
-      );
-    }
+    this.favorites.tracks = this.favorites.tracks.filter(
+      (trackId) => id !== trackId,
+    );
 
     return `track ${id} was removed from favorites`;
   }
 
   addAlbumToFavs(id: string): string {
-    if (this.albumsService.getAlbum(id)) {
-      this.favorites.albums.push(id);
+    if (!DB.albums[id]) {
+      throw new UnprocessableEntityException('this album does not exist');
     }
+
+    this.favorites.albums.push(id);
 
     return `album ${id} was added to favorites`;
   }
 
   deleteAlbumFromFavs(id: string): string {
-    if (this.albumsService.getAlbum(id)) {
-      this.favorites.tracks = this.favorites.albums.filter(
-        (albumId) => id !== albumId,
-      );
-    }
+    this.favorites.albums = this.favorites.albums.filter(
+      (albumId) => id !== albumId,
+    );
 
     return `album ${id} was removed from favorites`;
   }
 
   addArtistToFavs(id: string): string {
-    if (this.artistsService.getArtist(id)) {
-      this.favorites.artists.push(id);
+    if (!DB.artists[id]) {
+      throw new UnprocessableEntityException('this artist does not exist');
     }
+
+    this.favorites.artists.push(id);
 
     return `artist ${id} was added to favorites`;
   }
 
   deleteArtistFromFavs(id: string): string {
-    if (this.artistsService.getArtist(id)) {
-      this.favorites.artists = this.favorites.artists.filter(
-        (artistId) => id !== artistId,
-      );
-    }
+    this.favorites.artists = this.favorites.artists.filter(
+      (artistId) => id !== artistId,
+    );
 
     return `artist ${id} was removed from favorites`;
   }

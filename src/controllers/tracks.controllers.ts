@@ -1,6 +1,7 @@
 import {
   ParseUUIDPipe,
   Controller,
+  HttpCode,
   Delete,
   Get,
   Post,
@@ -42,6 +43,7 @@ export class TrackController {
   }
 
   @Delete('/:id') // TODO возвращает статус 200б а надо 204
+  @HttpCode(204)
   deleteTrack(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ): string {
