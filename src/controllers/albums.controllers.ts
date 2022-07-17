@@ -10,41 +10,41 @@ import {
 } from '@nestjs/common';
 import { AlbumsService } from '../services/albums.services';
 import { Album } from '../interfaces/albums.interface';
-import { CreateAlbumDto } from '../dto/albums.dto';
+import { AlbumDto } from '../dto/albums.dto';
 
 @Controller('album')
 export class AlbumController {
-  constructor(private readonly albumService: AlbumService) {}
+  constructor(private readonly albumsService: AlbumsService) {}
 
   @Post()
-  create(@Body() createAlbumDto: CreateAlbumDto): Album {
-    return this.albumService.create(createAlbumDto);
+  create(@Body() createAlbumDto: AlbumDto): Album {
+    return this.albumsService.create(createAlbumDto);
   }
 
   @Get()
-  getAllTraks(): Artist[] {
-    return this.artistsService.getAll();
+  getAllAlbums(): Album[] {
+    return this.albumsService.getAll();
   }
 
   @Get('/:id')
-  getArtist(
+  getAlbum(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ): Artist {
-    return this.artistsService.getArtist(id);
+  ): Album {
+    return this.albumsService.getAlbum(id);
   }
 
   @Put('/:id')
-  updateArtist(
+  updateAlbum(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-    @Body() artistInfo: ArtistDto,
-  ): Artist {
-    return this.artistsService.updateArtist(id, artistInfo);
+    @Body() albumInfo: AlbumDto,
+  ): Album {
+    return this.albumsService.updateAlbum(id, albumInfo);
   }
 
   @Delete('/:id') // TODO возвращает статус 200б а надо 204
-  deleteArtist(
+  deleteAlbum(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ): string {
-    return this.artistsService.deleteArtist(id);
+    return this.albumsService.deleteAlbum(id);
   }
 }

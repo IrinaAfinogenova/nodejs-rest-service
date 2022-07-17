@@ -1,10 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Track } from '../interfaces/tracks.interface';
+import { DB } from '../db';
 
 @Injectable()
 export class TracksService {
-  private readonly tracks: { [id: string]: Track } = {};
+  private readonly tracks: { [id: string]: Track } = DB.tracks;
 
   create(trackInfo: Omit<Track, 'id'>): Track {
     const id = uuidv4();
