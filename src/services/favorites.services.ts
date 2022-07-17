@@ -51,4 +51,40 @@ export class FavoritesService {
 
     return `track ${id} was removed from favorites`;
   }
+
+  addAlbumToFavs(id: string): string {
+    if (this.albumsService.getAlbum(id)) {
+      this.favorites.albums.push(id);
+    }
+
+    return `album ${id} was added to favorites`;
+  }
+
+  deleteAlbumFromFavs(id: string): string {
+    if (this.albumsService.getAlbum(id)) {
+      this.favorites.tracks = this.favorites.albums.filter(
+        (albumId) => id !== albumId,
+      );
+    }
+
+    return `album ${id} was removed from favorites`;
+  }
+
+  addArtistToFavs(id: string): string {
+    if (this.artistsService.getArtist(id)) {
+      this.favorites.artists.push(id);
+    }
+
+    return `artist ${id} was added to favorites`;
+  }
+
+  deleteArtistFromFavs(id: string): string {
+    if (this.artistsService.getArtist(id)) {
+      this.favorites.artists = this.favorites.artists.filter(
+        (artistId) => id !== artistId,
+      );
+    }
+
+    return `artist ${id} was removed from favorites`;
+  }
 }

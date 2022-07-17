@@ -1,10 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Artist } from '../interfaces/artists.interface';
+import { DB } from '../db';
 
 @Injectable()
 export class ArtistsService {
-  private readonly artists: { [id: string]: Artist } = {};
+  private readonly artists: { [id: string]: Artist } = DB.artists;
 
   create(artistInfo: Omit<Artist, 'id'>): Artist {
     const id = uuidv4();

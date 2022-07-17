@@ -36,4 +36,25 @@ export class FavoritesController {
   addAlbumToFavs(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.favoritesService.addAlbumToFavs(id);
   }
+
+  @Delete('album/:id')
+  deleteAlbumFromFavs(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ) {
+    return this.favoritesService.deleteAlbumFromFavs(id);
+  }
+
+  @Post('artist/:id')
+  addArtistToFavs(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ) {
+    return this.favoritesService.addArtistToFavs(id);
+  }
+
+  @Delete('artist/:id')
+  deleteArtistFromFavs(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ) {
+    return this.favoritesService.deleteArtistFromFavs(id);
+  }
 }
