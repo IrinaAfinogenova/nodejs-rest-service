@@ -56,7 +56,7 @@ export class UserController {
 
   @Delete('/:id')
   deleteUser(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ): string {
     return this.userService.deleteUser(id);
   }

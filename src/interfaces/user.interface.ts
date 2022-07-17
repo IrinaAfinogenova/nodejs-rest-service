@@ -1,4 +1,4 @@
-export interface UserDto {
+export interface UserDto { // TODO уюбрать DTO
   id: string;
   login: string;
   password: string;
