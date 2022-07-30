@@ -1,6 +1,6 @@
 FROM node:16 AS development
 
-WORKDIR /usr/src/app
+WORKDIR /home/nestjs-rest
 
 COPY package*.json ./
 
@@ -17,7 +17,7 @@ FROM node:16 as production
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
-WORKDIR /usr/src/app
+WORKDIR /home/nestjs-rest
 
 COPY package*.json ./
 
@@ -25,6 +25,6 @@ RUN npm install --only=production
 
 COPY . .
 
-COPY --from=development /usr/src/app/dist ./dist
+COPY --from=development /home/nestjs-rest/dist ./dist
 
 CMD [ "node", "dist/main.js" ]

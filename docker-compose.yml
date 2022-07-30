@@ -1,9 +1,16 @@
 version: '3.8'
 
+volumes:
+  docker-nest-postgres:
+networks:
+  webnet:
+    name: webnet
+    driver: bridge
+
 services:
     dev:
-        container_name: nestjs-rest-dev
-        image: nestjs-rest-dev:1.0.0
+        container_name: nestjs-rest
+        restart: always
         build:
             context: .
             target: development
@@ -12,28 +19,31 @@ services:
         ports:
            - ${PORT}:${PORT}
         networks:
-            - nesjs-network
+            - webnet
         volumes:
-            - .:/usr/src/app
-            - /usr/src/app/node_modules
-        restart: unless-stopped
-    prod:
-        container_name: nestjs-rest-dev
-        image: nestjs-rest-dev:1.0.0
-        build:
+            - type: bind
+              source: ./src
+              target: /home/nestjs-rest/src
+            - ./logs:/home/nestjs-rest/logs
+        env_file: 
+            - .env
+        depends_on:
+            - postgres
+    postgres:
+        container_name: postgres
+        image: postgres:1.0.0
+        build: 
+            dockerfile: ./database/Dockerfile
             context: .
-            target: production
-            dockerfile: ./Dockerfile
-        command: npm run start:prod
-        ports:
-            - 3000:3000
-            - 9229:9229
         networks:
-            - nesjs-network
+            - webnet
+        environment:
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_DB: ${DB_DATABASE_NAME}
+        ports:
+           - ${DB_PORT}:${DB_PORT}
         volumes:
-            - .:/usr/src/app
-            - /usr/src/app/node_modules
-        restart: unless-stopped
-
-networks:
-    nesjs-network:
+            - docker-nest-postgres:/var/lib/postgresql/data 
+        env_file: 
+            - .env

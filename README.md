@@ -1,7 +1,9 @@
 How to work with apllication
 
 installing NPM modules: npm run install
-Running application: npm start
+
+docker-compose up -d --build
+docker-compose up -d
 
 Default localhost:4000, you can change port in env file
 
